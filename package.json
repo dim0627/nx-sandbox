@@ -54,6 +54,7 @@
     "@expo/metro-config": "0.3.10",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
     "expo": "44.0.6",
     "expo-dev-client": "0.8.4",
