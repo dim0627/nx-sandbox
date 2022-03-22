@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "gen:api": "openapi --input http://localhost:3333/api-json --output libs/api-client --useOptions"
   },
   "private": true,
   "devDependencies": {
@@ -45,6 +46,7 @@
     "jest-expo": "44.0.1",
     "metro-resolver": "0.66.2",
     "nx": "13.9.3",
+    "openapi-typescript-codegen": "^0.20.1",
     "prettier": "^2.5.1",
     "ts-jest": "27.0.5",
     "tsconfig-paths-webpack-plugin": "3.5.2",
