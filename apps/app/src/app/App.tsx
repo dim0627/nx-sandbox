@@ -5,7 +5,9 @@ import {
   SafeAreaView,
   StatusBar,
   Text,
+  TextInput,
 } from 'react-native';
+import { useForm, Controller } from "react-hook-form";
 import { initializeApp } from 'firebase/app';
 
 // Optionally import the services that you want to use
@@ -14,6 +16,8 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebas
 //import {...} from "firebase/firestore";
 //import {...} from "firebase/functions";
 //import {...} from "firebase/storage";
+import { UsersService } from '../../../../libs/api-client/services/UsersService';
+import { OpenAPI } from 'libs/api-client/core/OpenAPI';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -32,20 +36,58 @@ onAuthStateChanged(auth, user => {
   console.log("onAuthStateChanged", user)
 })
 
+OpenAPI.BASE = "http://localhost:3333"
+
 const App = () => {
-  const handleSubmit = async () => {
-    const res = await signInWithEmailAndPassword(auth, "dim0627@gmail.com", "test1111")
-    console.log("submit", res)
-    const token = await res.user.getIdToken()
-    console.log("token", token)
+  const { control, handleSubmit } = useForm()
+  const onSubmit = async (data) => {
+    const res = await UsersService.create({
+      requestBody: {
+        email: data.email,
+        password: data.password
+      }
+    })
+    console.log(res)
+    // const res = await signInWithEmailAndPassword(auth, "dim0627@gmail.com", "test1111")
+    // console.log("submit", res)
+    // const token = await res.user.getIdToken()
+    // console.log("token", token)
   }
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="email"
+        />
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="password"
+        />
         <Text>{auth.currentUser ? auth.currentUser.email : "no logged in"}</Text>
-        <Button title="submit" onPress={handleSubmit}>submit</Button>
+        <Button title="submit" onPress={handleSubmit(onSubmit)}>submit</Button>
       </SafeAreaView>
     </>
   );
