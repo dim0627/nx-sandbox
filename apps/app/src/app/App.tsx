@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React from 'react';
 import {
+  Button,
   SafeAreaView,
   StatusBar,
   Text,
@@ -8,7 +9,7 @@ import {
 import { initializeApp } from 'firebase/app';
 
 // Optionally import the services that you want to use
-//import {...} from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 //import {...} from "firebase/database";
 //import {...} from "firebase/firestore";
 //import {...} from "firebase/functions";
@@ -26,13 +27,25 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
+const auth = getAuth()
+onAuthStateChanged(auth, user => {
+  console.log("onAuthStateChanged", user)
+})
 
 const App = () => {
+  const handleSubmit = async () => {
+    const res = await signInWithEmailAndPassword(auth, "dim0627@gmail.com", "test1111")
+    console.log("submit", res)
+    const token = await res.user.getIdToken()
+    console.log("token", token)
+  }
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <Text>aaa</Text>
+        <Text>{auth.currentUser ? auth.currentUser.email : "no logged in"}</Text>
+        <Button title="submit" onPress={handleSubmit}>submit</Button>
       </SafeAreaView>
     </>
   );
