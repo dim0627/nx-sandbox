@@ -1,42 +1,26 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
-import { UpdateSessionDto } from './dto/update-session.dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '../users/entities/user.entity';
 
+@ApiTags("sessions")
 @Controller('sessions')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post()
+  @ApiOperation({
+    operationId: "create",
+  })
+  @ApiOkResponse({
+    type: User
+  })
   create(@Body() createSessionDto: CreateSessionDto) {
     return this.sessionsService.create(createSessionDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.sessionsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sessionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
-    return this.sessionsService.update(+id, updateSessionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sessionsService.remove(+id);
   }
 }
